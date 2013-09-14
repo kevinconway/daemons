@@ -15,7 +15,7 @@ Simply import, extend, and start.
 Show Me
 =======
 
-::
+.. code-block:: python
 
     #!/usr/bin/python
 
