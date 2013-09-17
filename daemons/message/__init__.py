@@ -23,7 +23,7 @@ class MessageDaemon(Daemon):
 
     # This alias for sleep is placed here to allow extensions to change the
     # idle behaviour of the loop without monkey patching the time library.
-    sleep = time.sleep
+    sleep = staticmethod(time.sleep)
 
     def __init__(self, pidfile, idle_time=0.1):
 
