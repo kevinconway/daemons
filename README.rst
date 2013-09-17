@@ -7,10 +7,13 @@ Daemons
 What Is Daemons?
 ===================
 
-Daemons is a resource library for Python developers that want to create daemon
-processes.
+`Daemons` is a resource library for Python developers that want to create
+daemon processes.
 
-Simply import, extend, and start.
+The idea is to provide the basic daemon functionality while still giving the
+developer the ability to customize their daemon for any purpose.
+
+Simply import, extend, and `start()`.
 
 Show Me
 =======
@@ -24,8 +27,6 @@ Show Me
     import time
 
     from daemons.base import Daemon
-
-    logging.basicConfig(filename="daemon.log", level=logging.DEBUG)
 
 
     class SleepyDaemon(Daemon):
@@ -41,6 +42,7 @@ Show Me
 
         action = sys.argv[1]
 
+        logging.basicConfig(filename="daemon.log", level=logging.DEBUG)
         d = SleepyDaemon(pidfile='daemon.pid')
 
         if action == "start":
@@ -60,7 +62,8 @@ What else does it do?
 
 The daemon classes in this package are simply meant to provide a base for
 building custom daemons. None of them "do" anything on their own. All daemons
-can have the "run()" method extended to provide custom functionality.
+define a set of methods that can be overwritten to provide any amount of
+custom functionality.
 
 Built in to each daemon class is:
 
