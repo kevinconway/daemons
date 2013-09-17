@@ -11,7 +11,7 @@ import time
 
 # Rig up some special pathing for tests.
 test_directory = os.path.dirname(os.path.realpath(__file__))
-package_directory = os.path.join(test_directory, '..')
+package_directory = os.path.join(test_directory, '..', '..')
 sys.path.append(package_directory)
 
 import logging
