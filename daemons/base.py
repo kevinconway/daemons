@@ -69,9 +69,9 @@ class Daemon(object):
                 # Exit first parent.
                 sys.exit(0)
 
-        except OSError as e:
+        except OSError as err:
 
-            LOG.exception("Fork #1 failed: %d (%s)", (e.errno, e.strerror))
+            LOG.exception("Fork #1 failed: %d (%s)", err.errno, err.strerror)
             sys.exit(1)
 
         # Decouple from parent environment.
@@ -91,7 +91,7 @@ class Daemon(object):
 
                 LOG.exception(
                     "Fork #2 failed: %d (%s)",
-                    (err.errno, err.strerror,)
+                    err.errno, err.strerror
                 )
                 sys.exit(1)
 
@@ -106,10 +106,10 @@ class Daemon(object):
 
         except IOError as err:
 
-            LOG.exception("Failed to write pidfile (%s).", (self.pidfile,))
+            LOG.exception("Failed to write pidfile (%s).", self.pidfile)
             sys.exit(1)
 
-        LOG.info("Daemon process running (%s).", (self.pidfile,))
+        LOG.info("Daemon process running (%s).", self.pidfile)
 
     def start(self):
         """Start the daemon."""
@@ -128,7 +128,7 @@ class Daemon(object):
         if pid is not None:
 
             message = "Pidfile %s already exist. Cannot start daemon."
-            LOG.error(message, (self.pidfile,))
+            LOG.error(message, self.pidfile)
             sys.exit(1)
 
         # Start the daemon.
@@ -137,13 +137,13 @@ class Daemon(object):
         # Begin the daemon actions.
         try:
 
-            LOG.info("Daemon entering run loop. (%s)", (self.pidfile,))
+            LOG.info("Daemon entering run loop. (%s)", self.pidfile)
             self.run()
 
         except Exception:
 
             message = "Uncaught exception in the daemon run() method for (%s)"
-            LOG.exception(message, (self.pidfile,))
+            LOG.exception(message, self.pidfile)
 
     def stop(self, ignore=False):
         """Stop the daemon.
@@ -168,12 +168,12 @@ class Daemon(object):
             if ignore is True:
 
                 message = "No pidfile (%s) found when calling stop."
-                LOG.warning(message, (self.pidfile,))
+                LOG.warning(message, self.pidfile)
 
                 return None
 
             message = "Pidfile %s does not exist. Cannot stop daemon."
-            LOG.error(message, (self.pidfile,))
+            LOG.error(message, self.pidfile)
             sys.exit(1)
 
         # Try killing the daemon process.
@@ -196,17 +196,17 @@ class Daemon(object):
 
             else:
 
-                LOG.exception("Failed to kill process (%s).", (self.pidfile,))
+                LOG.exception("Failed to kill process (%s).", self.pidfile)
                 sys.exit(1)
 
-        LOG.info("Daemon stopped. (%s)", (self.pidfile,))
+        LOG.info("Daemon stopped. (%s)", self.pidfile)
 
     def shutdown(self, *args, **kwargs):
         """Run all cleanup functions and then exit."""
 
         status = 0
 
-        LOG.info("Daemon running cleanup. (%s)", (self.pidfile,))
+        LOG.info("Daemon running cleanup. (%s)", self.pidfile)
         for func in self.tear_down:
 
             try:
@@ -218,13 +218,13 @@ class Daemon(object):
                 status = 1
                 LOG.exception("A tear down function failed to complete.")
 
-        LOG.info("Daemon done running cleanup. (%s)", (self.pidfile,))
+        LOG.info("Daemon done running cleanup. (%s)", self.pidfile)
         sys.exit(status)
 
     def restart(self):
         """Restart the daemon."""
 
-        LOG.info("Daemon restarting. (%s)", (self.pidfile,))
+        LOG.info("Daemon restarting. (%s)", self.pidfile)
         self.stop(ignore=True)
         self.start()
 
