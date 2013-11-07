@@ -18,7 +18,6 @@ import logging
 import signal
 
 from functools import partial
-from signal import SIGTERM
 
 
 LOG = logging.getLogger(__name__)
@@ -181,7 +180,7 @@ class Daemon(object):
 
             while True:
 
-                os.kill(pid, SIGTERM)
+                os.kill(pid, signal.SIGTERM)
                 time.sleep(0.1)
 
         except OSError as err:
