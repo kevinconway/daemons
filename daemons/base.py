@@ -90,11 +90,11 @@ class Daemon(object):
 
         except OSError as err:
 
-                LOG.exception(
-                    "Fork #2 failed: %d (%s)",
-                    err.errno, err.strerror
-                )
-                sys.exit(1)
+            LOG.exception(
+                "Fork #2 failed: %d (%s)",
+                err.errno, err.strerror
+            )
+            sys.exit(1)
 
         # Write pidfile.
         pid = str(os.getpid())
