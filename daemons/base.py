@@ -18,7 +18,6 @@ import logging
 import signal
 
 from functools import partial
-from signal import SIGTERM
 
 
 LOG = logging.getLogger(__name__)
@@ -66,6 +65,7 @@ class Daemon(object):
 
             pid = os.fork()
             if pid > 0:
+
                 # Exit first parent.
                 sys.exit(0)
 
@@ -84,16 +84,17 @@ class Daemon(object):
 
             pid = os.fork()
             if pid > 0:
+
                 # Exit from second parent.
                 sys.exit(0)
 
         except OSError as err:
 
-                LOG.exception(
-                    "Fork #2 failed: %d (%s)",
-                    err.errno, err.strerror
-                )
-                sys.exit(1)
+            LOG.exception(
+                "Fork #2 failed: %d (%s)",
+                err.errno, err.strerror
+            )
+            sys.exit(1)
 
         # Write pidfile.
         pid = str(os.getpid())
@@ -181,12 +182,21 @@ class Daemon(object):
 
             while True:
 
-                os.kill(pid, SIGTERM)
+                # Here we use a SIGTERM to kill the process for two reasons:
+                # 1) It ensures that the cleanup functions are triggered.
+                # 2) It allows for stop to be used in something similar to
+                # an init script. For example, if you want a script that can
+                # start/stop/restart the daemon process it needs to be able
+                # to stop the process after it is already daemonized. Since
+                # the stop() method cannot be called on the daemonized object
+                # directly we use the signal to trigger the desired behaviour.
+                os.kill(pid, signal.SIGTERM)
                 time.sleep(0.1)
 
         except OSError as err:
 
-            # Remove the pidfile after the daemon is stopped.
+            # Check that the process has been killed and force removal
+            # of the pidfile in the event of a cleanup failure.
             err_string = str(err)
             if err_string.find("No such process") > 0:
 
