@@ -65,6 +65,7 @@ class Daemon(object):
 
             pid = os.fork()
             if pid > 0:
+
                 # Exit first parent.
                 sys.exit(0)
 
@@ -83,6 +84,7 @@ class Daemon(object):
 
             pid = os.fork()
             if pid > 0:
+
                 # Exit from second parent.
                 sys.exit(0)
 
