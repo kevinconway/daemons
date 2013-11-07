@@ -33,6 +33,17 @@ def test_start(tmpdir):
     # A pid file should be generated at start.
     assert os.path.exists(pid_path)
 
+    # The process should actually be running.
+    pid = -1
+    with open(pid_path, 'r') as pidfile:
+
+        pid = pidfile.read().strip()
+
+    assert pid != -1
+
+    response_code = call(['ps', '-p', pid])
+    assert response_code == 0
+
     # Stop the test daemon.
     call(['python',
           helper_path,
@@ -60,6 +71,14 @@ def test_stop(tmpdir):
     # Wait a second to make sure the daemon is running.
     time.sleep(1)
 
+    # Snag the PID.
+    pid = -1
+    with open(pid_path, 'r') as pidfile:
+
+        pid = pidfile.read().strip()
+
+    assert pid != -1
+
     # Stop the test daemon.
     call(['python',
           helper_path,
@@ -75,6 +94,10 @@ def test_stop(tmpdir):
 
     # Pid file should be removed after stop.
     assert not os.path.exists(pid_path)
+
+    # The process should actually be stopped.
+    response_code = call(['ps', '-p', pid])
+    assert response_code != 0
 
 
 def test_responds_to_signal(tmpdir):
@@ -96,10 +119,15 @@ def test_responds_to_signal(tmpdir):
     # Wait a second to make sure the daemon is running.
     time.sleep(1)
 
-    # Stop the test daemon.
+    # Snag the PID.
+    pid = -1
     with open(pid_path, 'r') as pidfile:
 
-        os.kill(int(pidfile.read()), signal.SIGTERM)
+        pid = pidfile.read().strip()
+
+    assert pid != -1
+
+    os.kill(int(pid), signal.SIGTERM)
 
     # Wait a second to make sure the daemon is stopped.
     time.sleep(1)
@@ -109,3 +137,7 @@ def test_responds_to_signal(tmpdir):
 
     # Pid file should be removed after stop.
     assert not os.path.exists(pid_path)
+
+    # The process should actually be stopped.
+    response_code = call(['ps', '-p', pid])
+    assert response_code != 0
