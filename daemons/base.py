@@ -187,7 +187,8 @@ class Daemon(object):
 
         except OSError as err:
 
-            # Remove the pidfile after the daemon is stopped.
+            # Check that the process has been killed and force removal
+            # of the pidfile in the event of a cleanup failure.
             err_string = str(err)
             if err_string.find("No such process") > 0:
 
