@@ -182,6 +182,14 @@ class Daemon(object):
 
             while True:
 
+                # Here we use a SIGTERM to kill the process for two reasons:
+                # 1) It ensures that the cleanup functions are triggered.
+                # 2) It allows for stop to be used in something similar to
+                # an init script. For example, if you want a script that can
+                # start/stop/restart the daemon process it needs to be able
+                # to stop the process after it is already daemonized. Since
+                # the stop() method cannot be called on the daemonized object
+                # directly we use the signal to trigger the desired behaviour.
                 os.kill(pid, signal.SIGTERM)
                 time.sleep(0.1)
 
