@@ -62,17 +62,11 @@ class EventletMessageDaemon(MessageDaemon):
             message = self.get_message()
             LOG.debug(
                 "Daemon (%r) got message (%r).",
-                self.pidfile,
+                self.pid,
                 message
             )
 
             if message is None:
-
-                LOG.debug(
-                    "Daemon (%r) received no message. Going idle for (%r).",
-                    self.pidfile,
-                    self.idle_time
-                )
 
                 self.sleep(self.idle_time)
                 continue
@@ -80,7 +74,7 @@ class EventletMessageDaemon(MessageDaemon):
             LOG.debug(
                 "Daemon (%r) attempting to start new greenthread with (%r) "
                 "active and (%r) free",
-                self.pidfile,
+                self.pid,
                 pool.running(),
                 pool.free()
             )
