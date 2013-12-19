@@ -56,6 +56,30 @@ class Daemon(object):
         signal.signal(signal.SIGTERM, self.shutdown)
 
     def daemonize(self):
+
+        self._double_fork()
+
+        # Write pidfile.
+        self.pid = str(os.getpid())
+
+        try:
+
+            with open(self.pidfile, 'w+') as pidfile:
+
+                pidfile.write("%s\n" % (self.pid,))
+
+        except IOError:
+
+            LOG.exception("Failed to write pidfile (%s).", self.pidfile)
+            sys.exit(1)
+
+        LOG.info(
+            "Daemon (%s) process running with pidfile (%s).",
+            self.pid,
+            self.pidfile,
+        )
+
+    def _double_fork(self):
         """Do the UNIX double-fork magic.
 
         See Stevens' "Advanced Programming in the UNIX Environment" for details
@@ -97,26 +121,6 @@ class Daemon(object):
                 err.errno, err.strerror
             )
             sys.exit(1)
-
-        # Write pidfile.
-        self.pid = str(os.getpid())
-
-        try:
-
-            with open(self.pidfile, 'w+') as pidfile:
-
-                pidfile.write("%s\n" % (self.pid,))
-
-        except IOError:
-
-            LOG.exception("Failed to write pidfile (%s).", self.pidfile)
-            sys.exit(1)
-
-        LOG.info(
-            "Daemon (%s) process running with pidfile (%s).",
-            self.pid,
-            self.pidfile,
-        )
 
     def start(self):
         """Start the daemon."""
@@ -245,6 +249,16 @@ class Daemon(object):
         self.start()
 
     def run(self):
-        """Overwrite this method to implement Daemon functionality."""
+        """Begin the main daemon loop.
+
+        This method will repeatedly call the '_step()' method.
+        """
+
+        while True:
+
+            self._step()
+
+    def _step(self):
+        """Overwrite this method to implement daemon behaviour."""
 
         raise NotImplementedError()
