@@ -11,13 +11,12 @@ Modifications to the original include:
 -   Integration of Python 'logging' module.
 """
 
-import sys
-import os
-import time
-import logging
-import signal
-
 from functools import partial
+import logging
+import os
+import signal
+import sys
+import time
 
 
 LOG = logging.getLogger(__name__)
@@ -44,11 +43,10 @@ class Daemon(object):
 
     def __init__(self, pidfile):
 
-        self.cwd = os.getcwd()
-        if not pidfile.startswith('/'):
-            self.pidfile = os.path.join(self.cwd, pidfile)
-        else:
-            self.pidfile = pidfile
+        self.pid = None
+        self.pidfile = pidfile
+        if not self.pidfile.startswith('/'):
+            self.pidfile = os.path.join(os.getcwd(), self.pidfile)
 
         self.tear_down.append(partial(os.remove, self.pidfile))
 
@@ -56,7 +54,6 @@ class Daemon(object):
         signal.signal(signal.SIGINT, self.shutdown)
         signal.signal(signal.SIGQUIT, self.shutdown)
         signal.signal(signal.SIGTERM, self.shutdown)
-        self.pid = None
 
     def daemonize(self):
         """Do the UNIX double-fork magic.

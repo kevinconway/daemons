@@ -1,11 +1,12 @@
 """This module contains a Daemon extension that listens for messages."""
 
-import time
 import logging
-
-LOG = logging.getLogger(__name__)
+import time
 
 from ..base import Daemon
+
+
+LOG = logging.getLogger(__name__)
 
 
 class MessageDaemon(Daemon):
