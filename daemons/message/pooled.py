@@ -48,8 +48,8 @@ class PooledMessageDaemon(MessageDaemon):
 
         raise NotImplementedError()
 
-    def run(self):
-        """This method puts the daemon into a poll/action loop.
+    def _step(self):
+        """This method grabs a new message and calls the pool dispatcher.
 
         This method should not be extended or overwritten. Instead,
         implementations of this daemon should implement the 'get_message()'
@@ -59,22 +59,20 @@ class PooledMessageDaemon(MessageDaemon):
         'handle_message' method and the message.
         """
 
-        while True:
+        message = self.get_message()
+        LOG.debug(
+            "Daemon (%r) got message (%r).",
+            self.pid,
+            message,
+        )
 
-            message = self.get_message()
-            LOG.debug(
-                "Daemon (%r) got message (%r).",
-                self.pid,
-                message,
-            )
+        if message is None:
 
-            if message is None:
+            self.sleep(self.idle_time)
+            continue
 
-                self.sleep(self.idle_time)
-                continue
+        self._dispatch(partial(self.handle_message, message))
 
-            self._dispatch(partial(self.handle_message, message))
+        if self.aggressive_yield is True:
 
-            if self.aggressive_yield is True:
-
-                self.sleep(0)
+            self.sleep(0)

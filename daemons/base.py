@@ -245,6 +245,16 @@ class Daemon(object):
         self.start()
 
     def run(self):
-        """Overwrite this method to implement Daemon functionality."""
+        """Begin the main daemon loop.
+
+        This method will repeatedly call the '_step()' method.
+        """
+
+        while True:
+
+            self._step()
+
+    def _step(self):
+        """Overwrite this method to implement daemon behaviour."""
 
         raise NotImplementedError()

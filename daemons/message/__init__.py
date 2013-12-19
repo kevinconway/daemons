@@ -38,25 +38,23 @@ class MessageDaemon(Daemon):
             self.idle_time,
         )
 
-    def run(self):
-        """This method puts the daemon into a poll/action loop.
+    def _step(self):
+        """This method grabs a new message and dispaches it to the handler.
 
         This method should not be extended or overwritten. Instead,
         implementations of this daemon should implement the 'get_message()'
         and 'handle_message()' methods.
         """
 
-        while True:
+        message = self.get_message()
+        LOG.debug("Daemon (%r) got message (%r).", self.pid, message)
 
-            message = self.get_message()
-            LOG.debug("Daemon (%r) got message (%r).", self.pid, message)
+        if message is None:
 
-            if message is None:
+            self.sleep(self.idle_time)
+            continue
 
-                self.sleep(self.idle_time)
-                continue
-
-            self.handle_message(message)
+        self.handle_message(message)
 
     def get_message(self):
         """This method returns a message.
