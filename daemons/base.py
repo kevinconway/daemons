@@ -44,11 +44,9 @@ class Daemon(object):
 
     def __init__(self, pidfile):
 
-        self.cwd = os.getcwd()
-        if not pidfile.startswith('/'):
-            self.pidfile = os.path.join(self.cwd, pidfile)
-        else:
-            self.pidfile = pidfile
+        self.pidfile = pidfile
+        if not self.pidfile.startswith('/'):
+            self.pidfile = os.path.join(os.getcwd(), self.pidfile)
 
         self.tear_down.append(partial(os.remove, self.pidfile))
 
