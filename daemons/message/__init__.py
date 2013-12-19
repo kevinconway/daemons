@@ -33,8 +33,8 @@ class MessageDaemon(Daemon):
 
         LOG.info(
             "Starting message daemon (%r) with idle time (%r).",
-            pidfile,
-            idle_time
+            self.pid,
+            self.idle_time,
         )
 
     def run(self):
@@ -48,15 +48,9 @@ class MessageDaemon(Daemon):
         while True:
 
             message = self.get_message()
-            LOG.debug("Daemon (%r) got message (%r).", self.pidfile, message)
+            LOG.debug("Daemon (%r) got message (%r).", self.pid, message)
 
             if message is None:
-
-                LOG.debug(
-                    "Daemon (%r) did not get message. Going idle for (%r).",
-                    self.pidfile,
-                    self.idle_time
-                )
 
                 self.sleep(self.idle_time)
                 continue
