@@ -18,7 +18,7 @@ class MessageDaemon(Daemon):
     In order to implement this daemon the 'get_message()' and
     'handle_message()' methods must be defined.
 
-    Messages daemons can be constructed with an optional 'idle_time' which is
+    Message daemons can be constructed with an optional 'idle_time' which is
     the amount of time to sleep/idle when 'get_message()' returns None.
     """
 
