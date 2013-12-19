@@ -21,13 +21,9 @@ from daemons.base import Daemon
 
 class SleepyDaemon(Daemon):
 
-    def run(self):
+    def _step(self):
 
-        LOG.debug("Running daemon.")
-
-        while True:
-
-            time.sleep(.1)
+        time.sleep(.1)
 
 if __name__ == '__main__':
 
