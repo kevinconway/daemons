@@ -115,7 +115,11 @@ class Daemon(object):
             LOG.exception("Failed to write pidfile (%s).", self.pidfile)
             sys.exit(1)
 
-        LOG.info("Daemon process running (%s).", self.pidfile)
+        LOG.info(
+            "Daemon (%s) process running with pidfile (%s).",
+            self.pid,
+            self.pidfile,
+        )
 
     def start(self):
         """Start the daemon."""
@@ -143,13 +147,13 @@ class Daemon(object):
         # Begin the daemon actions.
         try:
 
-            LOG.info("Daemon entering run loop. (%s)", self.pidfile)
+            LOG.info("Daemon (%s) entering run loop.", self.pid)
             self.run()
 
         except Exception:
 
             message = "Uncaught exception in the daemon run() method for (%s)"
-            LOG.exception(message, self.pidfile)
+            LOG.exception(message, self.pid)
 
     def stop(self, ignore=False):
         """Stop the daemon.
@@ -211,17 +215,17 @@ class Daemon(object):
 
             else:
 
-                LOG.exception("Failed to kill process (%s).", self.pidfile)
+                LOG.exception("Failed to kill process (%s).", self.pid)
                 sys.exit(1)
 
-        LOG.info("Daemon stopped. (%s)", self.pidfile)
+        LOG.info("Daemon (%s) stopped.", self.pid)
 
     def shutdown(self, *args, **kwargs):
         """Run all cleanup functions and then exit."""
 
         status = 0
 
-        LOG.info("Daemon running cleanup. (%s)", self.pidfile)
+        LOG.info("Daemon (%s) running cleanup.", self.pid)
         for func in self.tear_down:
 
             try:
@@ -233,13 +237,13 @@ class Daemon(object):
                 status = 1
                 LOG.exception("A tear down function failed to complete.")
 
-        LOG.info("Daemon done running cleanup. (%s)", self.pidfile)
+        LOG.info("Daemon (%s) done running cleanup.", self.pid)
         sys.exit(status)
 
     def restart(self):
         """Restart the daemon."""
 
-        LOG.info("Daemon restarting. (%s)", self.pidfile)
+        LOG.info("Daemon (%s) restarting.", self.pid)
         self.stop(ignore=True)
         self.start()
 

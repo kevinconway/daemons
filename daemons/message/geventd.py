@@ -34,9 +34,9 @@ class GeventMessageDaemon(MessageDaemon):
         LOG.info(
             "Starting gevent message daemon (%r) with pool size (%r) and "
             "aggresive yield set to (%r).",
-            self.pidfile,
+            self.pid,
             self.pool_size,
-            self.aggressive_yield
+            self.aggressive_yield,
         )
 
     def run(self):
@@ -63,16 +63,16 @@ class GeventMessageDaemon(MessageDaemon):
             message = self.get_message()
             LOG.debug(
                 "Daemon (%r) got message (%r).",
-                self.pidfile,
-                message
+                self.pid,
+                message,
             )
 
             if message is None:
 
                 LOG.debug(
                     "Daemon (%r) received no message. Going idle for (%r).",
-                    self.pidfile,
-                    self.idle_time
+                    self.pid,
+                    self.idle_time,
                 )
 
                 self.sleep(self.idle_time)
@@ -81,9 +81,9 @@ class GeventMessageDaemon(MessageDaemon):
             LOG.debug(
                 "Daemon (%r) attempting to start new greenthread with (%r) "
                 "active and (%r) free",
-                self.pidfile,
+                self.pid,
                 pool.size - pool.free_count(),
-                pool.free_count()
+                pool.free_count(),
             )
             pool.spawn(self.handle_message, message)
 

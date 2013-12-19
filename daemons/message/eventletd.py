@@ -33,9 +33,9 @@ class EventletMessageDaemon(MessageDaemon):
         LOG.info(
             "Starting gevent message daemon (%r) with pool size (%r) and "
             "aggresive yield set to (%r).",
-            self.pidfile,
+            self.pid,
             self.pool_size,
-            self.aggressive_yield
+            self.aggressive_yield,
         )
 
     def run(self):
@@ -63,7 +63,7 @@ class EventletMessageDaemon(MessageDaemon):
             LOG.debug(
                 "Daemon (%r) got message (%r).",
                 self.pid,
-                message
+                message,
             )
 
             if message is None:
@@ -76,7 +76,7 @@ class EventletMessageDaemon(MessageDaemon):
                 "active and (%r) free",
                 self.pid,
                 pool.running(),
-                pool.free()
+                pool.free(),
             )
             pool.spawn(self.handle_message, message)
 
