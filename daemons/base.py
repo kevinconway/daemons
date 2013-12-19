@@ -44,6 +44,7 @@ class Daemon(object):
 
     def __init__(self, pidfile):
 
+        self.pid = None
         self.pidfile = pidfile
         if not self.pidfile.startswith('/'):
             self.pidfile = os.path.join(os.getcwd(), self.pidfile)
@@ -54,7 +55,6 @@ class Daemon(object):
         signal.signal(signal.SIGINT, self.shutdown)
         signal.signal(signal.SIGQUIT, self.shutdown)
         signal.signal(signal.SIGTERM, self.shutdown)
-        self.pid = None
 
     def daemonize(self):
         """Do the UNIX double-fork magic.
