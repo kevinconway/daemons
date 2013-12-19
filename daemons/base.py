@@ -11,13 +11,12 @@ Modifications to the original include:
 -   Integration of Python 'logging' module.
 """
 
-import sys
-import os
-import time
-import logging
-import signal
-
 from functools import partial
+import logging
+import os
+import signal
+import sys
+import time
 
 
 LOG = logging.getLogger(__name__)

@@ -1,11 +1,13 @@
 """This module contains a MessageDaemon extension that uses eventlet."""
 
-import eventlet
 import logging
 
-LOG = logging.getLogger(__name__)
+import eventlet
 
 from . import MessageDaemon
+
+
+LOG = logging.getLogger(__name__)
 
 
 class EventletMessageDaemon(MessageDaemon):

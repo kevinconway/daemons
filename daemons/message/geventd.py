@@ -1,12 +1,14 @@
 """This module contains a MessageDaemon extension that uses gevent."""
 
-import gevent
-import gevent.pool
 import logging
 
-LOG = logging.getLogger(__name__)
+import gevent
+import gevent.pool
 
 from . import MessageDaemon
+
+
+LOG = logging.getLogger(__name__)
 
 
 class GeventMessageDaemon(MessageDaemon):
