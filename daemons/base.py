@@ -44,7 +44,11 @@ class Daemon(object):
 
     def __init__(self, pidfile):
 
-        self.pidfile = pidfile
+        self.cwd = os.getcwd()
+        if not pidfile.startswith('/'):
+            self.pidfile = os.path.join(self.cwd, pidfile)
+        else:
+            self.pidfile = pidfile
 
         self.tear_down.append(partial(os.remove, self.pidfile))
 
@@ -52,6 +56,7 @@ class Daemon(object):
         signal.signal(signal.SIGINT, self.shutdown)
         signal.signal(signal.SIGQUIT, self.shutdown)
         signal.signal(signal.SIGTERM, self.shutdown)
+        self.pid = None
 
     def daemonize(self):
         """Do the UNIX double-fork magic.
@@ -97,15 +102,15 @@ class Daemon(object):
             sys.exit(1)
 
         # Write pidfile.
-        pid = str(os.getpid())
+        self.pid = str(os.getpid())
 
         try:
 
             with open(self.pidfile, 'w+') as pidfile:
 
-                pidfile.write("%s\n" % (pid,))
+                pidfile.write("%s\n" % (self.pid,))
 
-        except IOError as err:
+        except IOError:
 
             LOG.exception("Failed to write pidfile (%s).", self.pidfile)
             sys.exit(1)
