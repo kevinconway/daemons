@@ -69,7 +69,7 @@ class PooledMessageDaemon(MessageDaemon):
         if message is None:
 
             self.sleep(self.idle_time)
-            continue
+            return
 
         self._dispatch(partial(self.handle_message, message))
 

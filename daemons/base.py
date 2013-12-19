@@ -122,7 +122,6 @@ class Daemon(object):
             )
             sys.exit(1)
 
-
     def start(self):
         """Start the daemon."""
 

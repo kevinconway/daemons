@@ -52,7 +52,7 @@ class MessageDaemon(Daemon):
         if message is None:
 
             self.sleep(self.idle_time)
-            continue
+            return
 
         self.handle_message(message)
 
