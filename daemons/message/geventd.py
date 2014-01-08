@@ -35,4 +35,4 @@ class GeventMessageDaemon(PooledMessageDaemon):
             self.pool.size - self.pool.free_count(),
             self.pool.free_count(),
         )
-        self.pool.spawn_raw(func)
+        self.pool.spawn(func)
