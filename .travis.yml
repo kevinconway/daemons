@@ -4,10 +4,14 @@ python:
     - "2.7"
     - "3.2"
     - "3.3"
+    - "3.4"
 install:
     - pip install pep8 --use-mirrors
     - pip install pyflakes --use-mirrors
+    - pip install -e ./
 script:
     - pep8 daemons/
+    - pep8 tests/
     - pyflakes daemons/
+    - pyflakes tests/
     - py.test tests/
