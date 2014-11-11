@@ -5,31 +5,23 @@ Daemons
 **Well behaved unix daemons for every occasion.**
 
 What Is Daemons?
-===================
+================
 
 `Daemons` is a resource library for Python developers that want to create
-daemon processes.
+daemon processes. The classes in this library provide the basic daemonization,
+signal handling, and pid management functionality while allowing for any
+implementation of behaviour and logic.
 
-The idea is to provide the basic daemon functionality while still giving the
-developer the ability to customize their daemon for any purpose.
-
-Simply import, extend, and `start()`.
-
-Show Me
-=======
+Example Custom Daemon
+=====================
 
 .. code-block:: python
 
-    #!/usr/bin/python
-
-    import sys
-    import logging
     import time
 
-    from daemons.base import Daemon
+    from daemons.prefab import run
 
-
-    class SleepyDaemon(Daemon):
+    class SleepyDaemon(run.RunDaemon):
 
         def run(self):
 
@@ -37,13 +29,28 @@ Show Me
 
                 time.sleep(1)
 
+Now to create a simple init script which can launch the daemon.
+
+.. code-block:: python
+
+    #!/usr/bin/env python
+
+    import logging
+    import os
+    import sys
+    import time
+
+    from mypackage import SleepyDaemon
+
 
     if __name__ == '__main__':
 
         action = sys.argv[1]
+        logfile = os.path.join(os.getcwd(), "sleepy.log")
+        pidfile = os.path.join(os.getcwd(), "sleepy.pid")
 
-        logging.basicConfig(filename="daemon.log", level=logging.DEBUG)
-        d = SleepyDaemon(pidfile='daemon.pid')
+        logging.basicConfig(filename=logfile, level=logging.DEBUG)
+        d = SleepyDaemon(pidfile=pidfile)
 
         if action == "start":
 
@@ -57,21 +64,52 @@ Show Me
 
             d.restart()
 
-What else does it do?
-=====================
+There are more daemon types than the simple RunDaemon. Check the docs for more.
 
-The daemon classes in this package are simply meant to provide a base for
-building custom daemons. None of them "do" anything on their own. All daemons
-define a set of methods that can be overwritten to provide any amount of
-custom functionality.
+Wrapping Existing Code
+======================
 
-Built in to each daemon class is:
+Daemons can also be used to daemonize an arbitrary Python function.
 
--   Pidfile management.
+.. code-block:: python
 
--   Signal trapping.
+    import time
 
--   Logging output using Python's standard lib "logging" module.
+    from daemons import daemonizer
+
+    @daemonizer.run(pidfile="/tmp/sleepy.pid")
+    def sleepy(sleep_time):
+
+        while True:
+
+            time.sleep(sleep_time)
+
+    sleep(20)  # Daemon started with 20 second sleep time.
+
+The daemonizer also supports adding signal handlers. Check the docs for more.
+
+Daemon Functionality
+====================
+
+The daemons in the 'prefab' module come bundled with the following features:
+
+-   pidfile management
+-   signal handling
+-   start/stop/restart functionality
+-   unix process daemonization
+
+The default implementation of these feature are all driven by Python standard
+library modules. Each component may be overridden or extended by adding another
+base class to your daemon that implements the component interface. Check the
+'interfaces' package for items to implement.
+
+The 'prefab' daemons come in three flavors. The 'RunDaemon' requires that you
+implement the 'run' method which should use some form of a loop. If the 'run'
+method completes the process will stop. The 'StepDaemon' requires that you
+implement the 'step' method. The process will call 'step' on an infinite loop.
+The eventlet and gevent message daemons require that you implement the
+'get_message' and 'handle_message' methods. These will fetch and handle
+messages within green-threads.
 
 License
 =======

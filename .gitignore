@@ -37,3 +37,6 @@ nosetests.xml
 
 # PyPm
 .pymodules
+
+# Custom
+docs/_build
