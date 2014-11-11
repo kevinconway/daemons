@@ -30,7 +30,13 @@ class SimplePidManager(pid.PidManager):
 
             with open(self.pidfile, 'r') as pidfile:
 
-                return int(pidfile.read().strip())
+                try:
+
+                    return int(pidfile.read().strip())
+
+                except ValueError:
+
+                    return None
 
         except IOError:
 

@@ -6,6 +6,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import sys
+import time
 
 import pytest
 
@@ -13,7 +14,7 @@ from daemons.daemonize import simple
 from daemons.pid import simple as simple_pid
 
 
-class TestDaemon(simple_pid.SimplePidManager, simple.SimpleDaemonizeManager):
+class DaemonTest(simple_pid.SimplePidManager, simple.SimpleDaemonizeManager):
 
     """Daemon for testing."""
 
@@ -27,7 +28,7 @@ def pidfile(tmpdir):
 @pytest.fixture
 def handler(pidfile):
     """Get an instance of the daemonize manager."""
-    return TestDaemon(pidfile=pidfile)
+    return DaemonTest(pidfile=pidfile)
 
 
 def test_double_fork_daemonizes(handler, monkeypatch):
@@ -36,4 +37,8 @@ def test_double_fork_daemonizes(handler, monkeypatch):
     handler.daemonize()
     monkeypatch.undo()
 
+    # Tests were failing intermittently due to a timing issue where the pid
+    # file would still be in the process of writing to disk while being read
+    # from.
+    time.sleep(.1)
     assert handler.pid is not None
