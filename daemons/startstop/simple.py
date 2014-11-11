@@ -70,7 +70,17 @@ class SimpleStartStopManager(startstop.StartStopManager):
 
             if "No such process" in err.message:
 
-                LOG.info("Succesfully stopped process.".format(self.pid))
+                LOG.info("Succesfully stopped the process.")
+                return None
+
+            LOG.exception("Failed to stop the process:")
+            sys.exit(exit.STOP_FAILED)
+
+        except TypeError as err:
+
+            if "an integer is required" in err.message:
+
+                LOG.info("Succesfully stopped the process.")
                 return None
 
             LOG.exception("Failed to stop the process:")
