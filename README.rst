@@ -12,19 +12,14 @@ daemon processes. The classes in this library provide the basic daemonization,
 signal handling, and pid management functionality while allowing for any
 implementation of behaviour and logic.
 
-Show Me
-=======
+Example Custom Daemon
+=====================
 
 .. code-block:: python
 
-    #!/usr/bin/python
-
-    import sys
-    import logging
     import time
 
     from daemons.prefab import run
-
 
     class SleepyDaemon(run.RunDaemon):
 
@@ -34,13 +29,28 @@ Show Me
 
                 time.sleep(1)
 
+Now to create a simple init script which can launch the daemon.
+
+.. code-block:: python
+
+    #!/usr/bin/env python
+
+    import logging
+    import os
+    import sys
+    import time
+
+    from mypackage import SleepyDaemon
+
 
     if __name__ == '__main__':
 
         action = sys.argv[1]
+        logfile = os.path.join(os.getcwd(), "sleepy.log")
+        pidfile = os.path.join(os.getcwd(), "sleepy.pid")
 
-        logging.basicConfig(filename="daemon.log", level=logging.DEBUG)
-        d = SleepyDaemon(pidfile='daemon.pid')
+        logging.basicConfig(filename=logfile, level=logging.DEBUG)
+        d = SleepyDaemon(pidfile=pidfile)
 
         if action == "start":
 
@@ -54,8 +64,32 @@ Show Me
 
             d.restart()
 
-What Is Included?
-=================
+There are more daemon types than the simple RunDaemon. Check the docs for more.
+
+Wrapping Existing Code
+======================
+
+Daemons can also be used to daemonize an arbitrary Python function.
+
+.. code-block:: python
+
+    import time
+
+    from daemons import daemonizer
+
+    @daemonizer.run(pidfile="/tmp/sleepy.pid")
+    def sleepy(sleep_time):
+
+        while True:
+
+            time.sleep(sleep_time)
+
+    sleep(20)  # Daemon started with 20 second sleep time.
+
+The daemonizer also supports adding signal handlers. Check the docs for more.
+
+Daemon Functionality
+====================
 
 The daemons in the 'prefab' module come bundled with the following features:
 
