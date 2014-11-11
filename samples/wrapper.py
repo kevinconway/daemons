@@ -4,6 +4,7 @@
 
 import logging
 import os
+import signal
 import sys
 import time
 
@@ -13,7 +14,17 @@ from daemons import daemonizer
 LOG = logging.getLogger(__name__)
 
 
-@daemonizer.run(pidfile=os.path.join(os.getcwd(), "daemon.pid"))
+def log_goodbye():
+    """Log a goodbye message when the daemon stops."""
+    LOG.debug("Process shutting down...")
+
+
+@daemonizer.run(
+    pidfile=os.path.join(os.getcwd(), "daemon.pid"),
+    signals={
+        signal.SIGTERM: (log_goodbye,)
+    }
+)
 def main(idle):
     """Any normal python logic which runs a loop. Can take arguments."""
     while True:

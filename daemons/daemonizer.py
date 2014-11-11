@@ -11,59 +11,77 @@ from .prefab import run as rund
 from .prefab import step as stepd
 
 
-def run(pidfile):
-    """Wrap a function is a RunDaemon object."""
-    def outer_wrapper(fn):
+class DaemonizingWrapper(object):
 
-        class RunDaemonWrapper(rund.RunDaemon):
+    """Function wrapper which daemonizes the wrapped function."""
 
-            """RunDaemon which wraps some arbitrary function."""
+    DaemonClass = None
 
-            _fn = None
+    def __init__(self, pidfile, signals=None):
+        """Initialize the wrapper with a pidfile and signal handler mapping."""
+        self._pidfile = pidfile
+        self._signals = signals or {}
 
-            def run(self):
+        if not isinstance(self._signals, dict):
 
-                self._fn()
+            raise TypeError("Signals must be a dictionary.")
 
-        d = RunDaemonWrapper(pidfile=pidfile)
+    def __call__(self, fn):
+        """Decorate a function with daemonization."""
+        d = self.DaemonClass(pidfile=self._pidfile)
+
+        for signum, handlers in self._signals.items():
+
+            for handler in handlers:
+
+                d.handle(signum, handler)
 
         @functools.wraps(fn)
-        def inner_wrapper(*args, **kwargs):
-
+        def wrapper(*args, **kwargs):
+            """Start daemonization and pass args to the original func."""
             d._fn = functools.partial(fn, *args, **kwargs)
             d.start()
 
-        inner_wrapper.stop = lambda: d.stop()
+        wrapper.stop = lambda: d.stop()
 
-        return inner_wrapper
-
-    return outer_wrapper
+        return wrapper
 
 
-def step(pidfile):
-    """Wrap a function is a StepDaemon object."""
-    def outer_wrapper(fn):
+class RunDaemonWrapper(rund.RunDaemon):
 
-        class StepDaemonWrapper(stepd.StepDaemon):
+    """RunDaemon which runs some arbitrary function."""
 
-            """StepDaemon which wraps some arbitrary function."""
+    _fn = None
 
-            _fn = None
+    def run(self):
+        """Run the arbitrary function."""
+        self._fn()
 
-            def step(self):
 
-                self._fn()
+class StepDaemonWrapper(stepd.StepDaemon):
 
-        d = StepDaemonWrapper(pidfile=pidfile)
+    """StepDaemon which runs some arbitrary function."""
 
-        @functools.wraps(fn)
-        def inner_wrapper(*args, **kwargs):
+    _fn = None
 
-            d._fn = functools.partial(fn, *args, **kwargs)
-            d.start()
+    def step(self):
+        """Run the arbitrary function."""
+        self._fn()
 
-        inner_wrapper.stop = lambda: d.stop()
 
-        return inner_wrapper
+class RunDaemonizingWrapper(DaemonizingWrapper):
 
-    return outer_wrapper
+    """Function wrapper which wraps using a RunDaemon."""
+
+    DaemonClass = RunDaemonWrapper
+
+
+class StepDaemonizingWrapper(DaemonizingWrapper):
+
+    """Function wrapper which wraps using a StepDaemon."""
+
+    DaemonClass = StepDaemonWrapper
+
+
+run = RunDaemonizingWrapper
+step = StepDaemonizingWrapper
