@@ -68,7 +68,7 @@ class SimpleStartStopManager(startstop.StartStopManager):
 
         except RuntimeError as err:
 
-            if "No such process" in err.message:
+            if "No such process" in str(err):
 
                 LOG.info("Succesfully stopped the process.")
                 return None
@@ -78,7 +78,7 @@ class SimpleStartStopManager(startstop.StartStopManager):
 
         except TypeError as err:
 
-            if "an integer is required" in err.message:
+            if "an integer is required" in str(err):
 
                 LOG.info("Succesfully stopped the process.")
                 return None
