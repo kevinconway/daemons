@@ -9,7 +9,7 @@ with open('LICENSE') as f:
 
 setup(
     name='daemons',
-    version='1.2.1',
+    version='1.2.2',
     url='https://github.com/kevinconway/daemons',
     license=license,
     description='Well behaved unix daemons for every occasion.',
