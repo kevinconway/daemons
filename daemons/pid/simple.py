@@ -8,6 +8,7 @@ from __future__ import unicode_literals
 import logging
 import os
 import sys
+import errno
 
 from ..interfaces import pid
 from ..interfaces import exit
@@ -32,11 +33,33 @@ class SimplePidManager(pid.PidManager):
 
                 try:
 
-                    return int(pidfile.read().strip())
+                    pid = int(pidfile.read().strip())
 
                 except ValueError:
 
                     return None
+
+                try:
+
+                    os.kill(pid, 0)
+
+                except OSError as e:
+
+                    if e.errno == errno.EPERM:
+
+                        return pid
+
+                    elif e.errno == errno.ESRCH:
+
+                        return None
+
+                    LOG.exception(
+                        "os.kill returned unhandled error "
+                        "{0}".format(e.strerror)
+                    )
+                    sys.exit(exit.PIDFILE_ERROR)
+
+                return pid
 
         except IOError:
 
@@ -44,7 +67,7 @@ class SimplePidManager(pid.PidManager):
 
                 return None
 
-            LOG.exception("Failed to read pidfile {0}).".format(self.pidfile))
+            LOG.exception("Failed to read pidfile {0}.".format(self.pidfile))
             sys.exit(exit.PIDFILE_INACCESSIBLE)
 
     @pid.setter
