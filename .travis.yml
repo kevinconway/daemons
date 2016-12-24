@@ -6,8 +6,8 @@ python:
     - "3.3"
     - "3.4"
 install:
-    - pip install pep8 --use-mirrors
-    - pip install pyflakes --use-mirrors
+    - pip install pep8
+    - pip install pyflakes
     - pip install -e ./
 script:
     - pep8 daemons/
