@@ -6,12 +6,13 @@ python:
     - "3.3"
     - "3.4"
 install:
-    - pip install pep8 --use-mirrors
-    - pip install pyflakes --use-mirrors
+    - pip install pep8
+    - pip install pyflakes
     - pip install -e ./
 script:
     - pep8 daemons/
     - pep8 tests/
     - pyflakes daemons/
     - pyflakes tests/
+    - if [[ "$(python --version 2>&1)" =~ Python\ (3\.2.*) ]]; then pip install "pytest<3.0.0"; fi
     - py.test tests/
