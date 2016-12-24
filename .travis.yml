@@ -14,4 +14,5 @@ script:
     - pep8 tests/
     - pyflakes daemons/
     - pyflakes tests/
+    - if [[ "$(python --version 2>&1)" =~ Python\ (3\.2.*) ]]; then pip install "pytest<3.0.0"; fi
     - py.test tests/
