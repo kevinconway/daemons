@@ -23,7 +23,8 @@ def test_pidfile_is_absolute_path():
     user = getpass.getuser()
     m = simple.SimplePidManager(pidfile=pidfile)
     assert '~' not in m.pidfile
-    assert m.pidfile == '/home/{0}/test.pid'.format(user)
+    assert m.pidfile == '{0}/test.pid'.format(os.path.expanduser("~"))
+    assert user in m.pidfile
 
 
 def test_reads_pid_when_exists(tmpdir):
