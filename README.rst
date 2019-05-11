@@ -84,7 +84,7 @@ Daemons can also be used to daemonize an arbitrary Python function.
 
             time.sleep(sleep_time)
 
-    sleep(20)  # Daemon started with 20 second sleep time.
+    sleepy(20)  # Daemon started with 20 second sleep time.
 
 The daemonizer also supports adding signal handlers. Check the docs for more.
 
