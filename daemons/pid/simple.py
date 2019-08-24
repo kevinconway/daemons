@@ -29,7 +29,7 @@ class SimplePidManager(pid.PidManager):
         """
         try:
 
-            with open(self.pidfile, 'r') as pidfile:
+            with open(self.pidfile, "r") as pidfile:
 
                 try:
 

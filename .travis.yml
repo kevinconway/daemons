@@ -1,17 +1,37 @@
 language: python
-python:
-    - "2.6"
-    - "2.7"
-    - "3.3"
-    - "3.4"
+matrix:
+  include:
+    - name: "Python 2.6"
+      dist: "trusty"
+      python: "2.6"
+    - name: "Python 2.7"
+      dist: "trusty"
+      python: "2.7"
+    - name: "Python 3.3"
+      python: "3.3"
+      dist: "trusty"
+    - name: "Python 3.4"
+      python: "3.4"
+    - name: "Python 3.5"
+      python: "3.5"
+    - name: "Python 3.6"
+      python: "3.6"
+    - name: "Python 3.7"
+      python: "3.7"
 install:
-    - pip install pep8
-    - pip install pyflakes
+    - pip install pycodestyle
+    # Install a legacy pyflakes to use with Python2.6 since they no longer
+    # support installing the project in Python2.6 environments after 2.0.0.
+    # We should be able to use any modern version of pyflakes for modern Python
+    # installations.
+    - if [[ "$(python --version 2>&1)" =~ Python\ (2\.6.*|3\.3.*) ]]; then pip install pyflakes==1.6.0; else pip install pyflakes; fi
+    # Similarly, pytest has dropped support for Python 2.6 and 3.2. This
+    # installs a legacy version of it for those cases.
+    - if [[ "$(python --version 2>&1)" =~ Python\ (3\.2.*|2\.6.*) ]]; then pip install "pytest<3.0.0"; else pip install pytest; fi
     - pip install -e ./
 script:
-    - pep8 daemons/
-    - pep8 tests/
+    - pycodestyle daemons/
+    - pycodestyle tests/
     - pyflakes daemons/
     - pyflakes tests/
-    - if [[ "$(python --version 2>&1)" =~ Python\ (3\.2.*) ]]; then pip install "pytest<3.0.0"; fi
     - py.test tests/

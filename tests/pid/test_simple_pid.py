@@ -22,8 +22,8 @@ def test_pidfile_is_absolute_path():
     pidfile = "~/test.pid"
     user = getpass.getuser()
     m = simple.SimplePidManager(pidfile=pidfile)
-    assert '~' not in m.pidfile
-    assert m.pidfile == '{0}/test.pid'.format(os.path.expanduser("~"))
+    assert "~" not in m.pidfile
+    assert m.pidfile == "{0}/test.pid".format(os.path.expanduser("~"))
     assert user in m.pidfile
 
 

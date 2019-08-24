@@ -26,9 +26,7 @@ class SimpleDaemonizeManager(daemonize_iface.DaemonizeManager):
         # Write pidfile.
         self.pid = os.getpid()
 
-        LOG.info(
-            "Succesfully daemonized process {0}.".format(self.pid)
-        )
+        LOG.info("Succesfully daemonized process {0}.".format(self.pid))
 
     def _double_fork(self):
         """Do the UNIX double-fork magic.
@@ -49,10 +47,7 @@ class SimpleDaemonizeManager(daemonize_iface.DaemonizeManager):
         except OSError as err:
 
             LOG.exception(
-                "Fork #1 failed: {0} ({1})".format(
-                    err.errno,
-                    err.strerror,
-                ),
+                "Fork #1 failed: {0} ({1})".format(err.errno, err.strerror)
             )
             sys.exit(exit.DAEMONIZE_FAILED)
             return None
@@ -74,10 +69,7 @@ class SimpleDaemonizeManager(daemonize_iface.DaemonizeManager):
         except OSError as err:
 
             LOG.exception(
-                "Fork #2 failed: {0} ({1})".format(
-                    err.errno,
-                    err.strerror,
-                ),
+                "Fork #2 failed: {0} ({1})".format(err.errno, err.strerror)
             )
             sys.exit(exit.DAEMONIZE_FAILED)
             return None

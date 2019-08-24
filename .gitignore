@@ -41,3 +41,9 @@ nosetests.xml
 
 # Custom
 docs/_build
+
+# MyPy
+.mypy_cache/
+
+# Pytest
+.pytest_cache/
