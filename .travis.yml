@@ -18,8 +18,6 @@ matrix:
       python: "3.6"
     - name: "Python 3.7"
       python: "3.7"
-    - name: "Python 3.8"
-      python: "3.8"
 install:
     - pip install pycodestyle
     # Install a legacy pyflakes to use with Python2.6 since they no longer
