@@ -1,13 +1,25 @@
 language: python
-python:
-    - "2.6"
-    - "2.7"
-    - "3.3"
-    - "3.4"
-    - "3.5"
-    - "3.6"
-    - "3.7"
-    - "3.8"
+matrix:
+  include:
+    - name: "Python 2.6"
+      os: "trusty"
+      python: "2.6"
+    - name: "Python 2.7"
+      os: "trusty"
+      python: "2.7"
+    - name: "Python 3.3"
+      python: "3.3"
+      os: "trusty"
+    - name: "Python 3.4"
+      python: "3.4"
+    - name: "Python 3.5"
+      python: "3.5"
+    - name: "Python 3.6"
+      python: "3.6"
+    - name: "Python 3.7"
+      python: "3.7"
+    - name: "Python 3.8"
+      python: "3.8"
 install:
     - pip install pycodestyle
     # Install a legacy pyflakes to use with Python2.6 since they no longer
