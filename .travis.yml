@@ -26,7 +26,7 @@ install:
     # support installing the project in Python2.6 environments after 2.0.0.
     # We should be able to use any modern version of pyflakes for modern Python
     # installations.
-    - if [[ "$(python --version 2>&1)" =~ Python\ 2\.6.* ]]; then pip install pyflakes==1.6.0; else pip install pyflakes; fi
+    - if [[ "$(python --version 2>&1)" =~ Python\ (2\.6.*|3\.3.*) ]]; then pip install pyflakes==1.6.0; else pip install pyflakes; fi
     # Similarly, pytest has dropped support for Python 2.6 and 3.2. This
     # installs a legacy version of it for those cases.
     - if [[ "$(python --version 2>&1)" =~ Python\ (3\.2.*|2\.6.*) ]]; then pip install "pytest<3.0.0"; else pip install pytest; fi
