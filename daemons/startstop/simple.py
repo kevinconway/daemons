@@ -97,8 +97,7 @@ class SimpleStartStopManager(startstop.StartStopManager):
 
 
 class SimpleStartStopStepManager(
-    startstop.StartStopStepManager,
-    SimpleStartStopManager
+    startstop.StartStopStepManager, SimpleStartStopManager
 ):
 
     """Step manager which leverages SimpleStartStopManager."""

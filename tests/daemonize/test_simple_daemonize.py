@@ -40,5 +40,5 @@ def test_double_fork_daemonizes(handler, monkeypatch):
     # Tests were failing intermittently due to a timing issue where the pid
     # file would still be in the process of writing to disk while being read
     # from.
-    time.sleep(.1)
+    time.sleep(0.1)
     assert handler.pid is not None

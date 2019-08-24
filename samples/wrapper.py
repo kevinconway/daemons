@@ -21,9 +21,7 @@ def log_goodbye():
 
 @daemonizer.run(
     pidfile=os.path.join(os.getcwd(), "daemon.pid"),
-    signals={
-        signal.SIGTERM: (log_goodbye,)
-    }
+    signals={signal.SIGTERM: (log_goodbye,)},
 )
 def main(idle):
     """Any normal python logic which runs a loop. Can take arguments."""

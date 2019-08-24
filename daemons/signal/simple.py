@@ -22,12 +22,7 @@ class SimpleSignalManager(signal_iface.SignalManager):
 
     """SignalManager which uses the python signal module."""
 
-    kill_signals = (
-        2,  # SIGINT
-        3,  # SIGQUIT
-        6,  # SIGABRT
-        15,  # SIGTERM
-    )
+    kill_signals = (2, 3, 6, 15)  # SIGINT  # SIGQUIT  # SIGABRT  # SIGTERM
 
     def __init__(self, *args, **kwargs):
         """Initialize the manager with a handler map."""
@@ -54,15 +49,13 @@ class SimpleSignalManager(signal_iface.SignalManager):
 
             raise TypeError(
                 "Signals must be given as integers. Got {0}.".format(
-                    type(signum),
-                ),
+                    type(signum)
+                )
             )
 
         if not callable(handler):
 
-            raise TypeError(
-                "Signal handlers must be callable.",
-            )
+            raise TypeError("Signal handlers must be callable.")
 
         signal.signal(signum, self._handle_signals)
         self._handlers[signum].append(handler)
@@ -77,8 +70,8 @@ class SimpleSignalManager(signal_iface.SignalManager):
 
             raise TypeError(
                 "Signals must be given as integers. Got {0}.".format(
-                    type(signum),
-                ),
+                    type(signum)
+                )
             )
 
         try:
@@ -124,7 +117,10 @@ class SimpleSignalManager(signal_iface.SignalManager):
 
                 handler()
 
-            except:
+            except:  # noqa(E722)
+                # The E722 (no bare except) setting is disabled here. The use
+                # of bare except is intentional. The goal of this is to catch
+                # _any_ error that escapes and ensure the process exits.
 
                 LOG.exception("A shutdown handler failed to execute:")
                 dirty = True

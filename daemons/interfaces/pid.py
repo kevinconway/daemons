@@ -25,11 +25,7 @@ class PidManager(object):
     def pidfile(self):
         """Get the absolute path of the pidfile."""
         return os.path.abspath(
-            os.path.expandvars(
-                os.path.expanduser(
-                    self._pidfile,
-                ),
-            ),
+            os.path.expandvars(os.path.expanduser(self._pidfile))
         )
 
     @property
