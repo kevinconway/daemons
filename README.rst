@@ -4,6 +4,19 @@ Daemons
 
 **Well behaved unix daemons for every occasion.**
 
+Project Status
+==============
+
+*Consider this project to be in maintenance mode*.
+
+This project went v1.0.0 in 2014. Since then it has only received two patches
+that contained code changes. All other patches have been maintenance updates
+to keep automated testing and static analysis running. I do not expect and am
+not entertaining new feature asks.
+
+I will still respond to PRs and issues that address bugs or security issues.
+Please send these to https://github.com/kevinconway/daemons.
+
 What Is Daemons?
 ================
 
