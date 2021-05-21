@@ -6,7 +6,7 @@ with open("README.rst") as f:
 
 setup(
     name="daemons",
-    version="1.3.1",
+    version="1.3.2",
     url="https://github.com/kevinconway/daemons",
     license="'Apache License 2.0",
     description="Well behaved unix daemons for every occasion.",
