@@ -16,6 +16,11 @@ from ..interfaces import startstop
 
 LOG = logging.getLogger(__name__)
 
+SUCCESS_MSG = "an integer is required"
+
+if sys.version_info >= (3, 10, 0):
+    SUCCESS_MSG = "object cannot be interpreted as an integer"
+
 
 class SimpleStartStopManager(startstop.StartStopManager):
 
@@ -78,7 +83,7 @@ class SimpleStartStopManager(startstop.StartStopManager):
 
         except TypeError as err:
 
-            if "an integer is required" in str(err):
+            if SUCCESS_MSG in str(err):
 
                 LOG.info("Succesfully stopped the process.")
                 return None
